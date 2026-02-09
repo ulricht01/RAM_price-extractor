@@ -9,16 +9,24 @@ ramky = Database("ramky")
 
 def get_html_with_playwright(url):
     with sync_playwright() as p:
-        # Spustíme prohlížeč (headless=True je pro GitHub Actions nutnost)
         browser = p.chromium.launch(headless=True)
-        # Nastavení uživatelského agenta, aby to vypadalo jako reálný člověk
-        context = browser.new_context(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
+        # Použijeme reálnější rozlišení a maskování
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+            viewport={'width': 1920, 'height': 1080}
+        )
         page = context.new_page()
         
-        # Přejdeme na stránku a počkáme, až se načte síťový provoz
-        page.goto(url, wait_until="networkidle")
+        # 1. Nastavíme delší timeout pro celou akci (60s)
+        page.set_default_timeout(60000)
         
-        # Získáme obsah HTML
+        # 2. Čekáme jen na DOMContentLoaded (rychlejší a stabilnější)
+        print(f"Otevírám URL: {url}")
+        page.goto(url, wait_until="domcontentloaded")
+        
+        # 3. Krátce počkáme (např. 2 sekundy), aby se stačily vykreslit ceny
+        page.wait_for_timeout(2000)
+        
         html = page.content()
         browser.close()
         return html
