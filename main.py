@@ -9,28 +9,34 @@ ramky = Database("ramky")
 
 def get_html_with_playwright(url):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        # Použijeme reálnější rozlišení a maskování
+        # Spustíme prohlížeč s parametry pro skrytí automatizace
+        browser = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
+        
         context = browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-            viewport={'width': 1920, 'height': 1080}
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            viewport={'width': 1920, 'height': 1080},
+            device_scale_factor=1,
         )
+        
+        # Tento skript odstraní příznak "webdriver", podle kterého weby poznají bota
         page = context.new_page()
+        page.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
         
-        # 1. Nastavíme delší timeout pro celou akci (60s)
-        page.set_default_timeout(60000)
-        
-        # 2. Čekáme jen na DOMContentLoaded (rychlejší a stabilnější)
         print(f"Otevírám URL: {url}")
-        page.goto(url, wait_until="domcontentloaded")
+        page.goto(url, wait_until="domcontentloaded", timeout=60000)
         
-        # 3. Krátce počkáme (např. 2 sekundy), aby se stačily vykreslit ceny
-        page.wait_for_timeout(2000)
-        
+        # Počkáme, až se objeví alespoň jeden produkt (selektor .browsingitem)
+        try:
+            page.wait_for_selector(".browsingitem", timeout=10000)
+        except:
+            print("Produkty se nenačetly včas. Možná Captcha.")
+            # Uložíme screenshot pro tvůj debug (uvidíš ho v GitHub logu nebo artefaktech)
+            page.screenshot(path="debug_screen.png")
+
         html = page.content()
         browser.close()
         return html
-
+    
 if __name__ == "__main__":
     date = datetime.datetime.now().strftime("%d.%m.%Y")
     
