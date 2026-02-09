@@ -9,7 +9,14 @@ ramky = Database("ramky")
 
 if __name__ == "__main__":
     date = datetime.datetime.now().strftime("%d.%m.%Y")
-    r = httpx.get(url=url, headers=headers)
+    
+    try:
+        r = httpx.get(url=url, headers=headers, timeout=20.0)
+        r.raise_for_status() # Zkontroluje, jestli se stránka vůbec stáhla (status 200)
+    except Exception as e:
+        print(f"Chyba při stahování stránky: {e}")
+        exit()
+    
     soup = BeautifulSoup(r.text, "html.parser")
     container = soup.find("div", class_ = "browsingitemcontainer")
     items = container.find_all("div", class_="browsingitem")
