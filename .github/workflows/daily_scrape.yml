@@ -1,0 +1,33 @@
+name: Daily RAM Scraping and Report
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # Spustí se každý den v 8:00 ráno
+  workflow_dispatch:      # Umožní spustit skript ručně tlačítkem
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install httpx beautifulsoup4 pandas matplotlib seaborn
+
+      - name: Run scraper
+        run: python main.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add ramky.db *.png
+          git commit -m "Auto-update: data and report" || exit 0
+          git push
