@@ -1,9 +1,10 @@
 from load import *
 from db import *
 from bs4 import BeautifulSoup
-import httpx
 import datetime
 from analysis import *
+import fake_useragent
+from curl_cffi import requests
 
 ramky = Database("ramky")
 
@@ -11,8 +12,13 @@ if __name__ == "__main__":
     date = datetime.datetime.now().strftime("%d.%m.%Y")
     
     try:
-        r = httpx.get(url=url, headers=headers, timeout=20.0)
-        r.raise_for_status() # Zkontroluje, jestli se stránka vůbec stáhla (status 200)
+        r = requests.get(
+            url, 
+            headers=headers, 
+            impersonate="chrome120", 
+            allow_redirects=True
+        )
+        r.raise_for_status() 
     except Exception as e:
         print(f"Chyba při stahování stránky: {e}")
         exit()
