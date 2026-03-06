@@ -1,0 +1,7 @@
+requests
+beautifulsoup4
+fake_useragent
+curl_cffi
+pandas
+seaborn
+matplotlib
