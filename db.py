@@ -23,6 +23,8 @@ class Database:
     
     def insert_data(self, name, price, date):
         self.cursor.execute("""INSERT INTO ramky (name, price, dt_insert) VALUES(?, ?, ?);""", [name, price, date])
+        self.conn.commit()
+
 
     def commit_and_close(self):
         self.conn.commit()
