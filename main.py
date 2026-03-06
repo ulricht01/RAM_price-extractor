@@ -9,7 +9,7 @@ from curl_cffi import requests
 ramky = Database("ramky")
 
 if __name__ == "__main__":
-    date = datetime.datetime.now().strftime("%d.%m.%Y")
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
     
     try:
         r = requests.get(

@@ -8,7 +8,7 @@ def process_and_save_report(raw_data):
     
     # 1. Příprava dat
     df = pd.DataFrame(raw_data, columns=["name", "price", "date"])
-    df["date"] = pd.to_datetime(df["date"], dayfirst=True)
+    df["date"] = pd.to_datetime(df["date"], format='ISO8601')
     df["price"] = pd.to_numeric(df["price"], errors="coerce")
     df = df.dropna(subset=["price"])
 
@@ -46,7 +46,7 @@ def process_and_save_report(raw_data):
 
         # Formátování osy X
         plt.xticks(avg_df["date"], rotation=45)
-        plot.xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter('%d.%m.%Y'))
+        plot.xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter('%Y-%m-%d'))
 
         # Odstranění popisků a nastavení titulu
         plt.xlabel("")
@@ -57,7 +57,7 @@ def process_and_save_report(raw_data):
         plt.tight_layout()
 
         # ULOŽENÍ MÍSTO ZOBRAZENÍ
-        filename = f"report_cen_{now.strftime('%Y_%m_%d')}.png"
+        filename = f"report_cen_{now.strftime('%Y-%m-%d')}.png"
         plt.savefig(filename)
         plt.close()  # Zavře graf, aby nezůstal v paměti
         print(f"Graf byl uložen jako {filename}")

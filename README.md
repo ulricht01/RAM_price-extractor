@@ -1,2 +1,3 @@
-1) Přidat dokumentaci
-2) Až budou data, přidat předpověď
+#Aliasy:
+- checkdb -> Spustí skript manuálně
+- update-ram -> aktualizuje soubory pomocí git fetch a vytvoří nový docker image 
