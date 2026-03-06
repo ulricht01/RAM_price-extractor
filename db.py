@@ -6,6 +6,7 @@ class Database:
         self.conn = sqlite3.connect(f"{db_name}.db")
         self.cursor = self.conn.cursor()
         self._create_table()
+        print(f"DEBUG: Zapisuju do: {os.path.abspath(db_name + '.db')}")
 
     def _create_table(self):
         self.cursor.execute("""
