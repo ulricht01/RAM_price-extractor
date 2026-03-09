@@ -1,0 +1,24 @@
+{
+  "name": "ram_price-extractor",
+  "version": "1.0.0",
+  "description": "- checkdb -> Spustí skript manuálně - update-ram -> aktualizuje soubory pomocí git fetch a vytvoří nový docker image",
+  "homepage": "https://github.com/ulricht01/RAM_price-extractor#readme",
+  "bugs": {
+    "url": "https://github.com/ulricht01/RAM_price-extractor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ulricht01/RAM_price-extractor.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "sqlite3": "^5.1.7"
+  }
+}
