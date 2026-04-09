@@ -30,10 +30,11 @@ if __name__ == "__main__":
     if(not ramky.check_for_today_data(date)):
         for item in items:
             name = item.find("a", class_ ="name").text
-            price_tag = item.find("span", class_="price-box__primary-price")
+            price_tag = item.find("span", class_="ads-pb__price-value js-price-box__primary-price__value")
 
             if name and price_tag:
                 price = "".join(filter(str.isdigit, price_tag.text))
+                
 
                 try:
                     price = int(price)
